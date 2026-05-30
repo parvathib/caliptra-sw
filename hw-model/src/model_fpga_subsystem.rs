@@ -577,17 +577,17 @@ impl ModelFpgaSubsystem {
 
         // Write UDS seed and field entropy to strap registers so that
         // set_secrets_valid(true) gives DOE deterministic values.
-        println!("[DEBUG] Writing DEFAULT_UDS_SEED to strap registers");
+        eprintln!("[DEBUG] Writing DEFAULT_UDS_SEED to strap registers");
         for (i, &val) in DEFAULT_UDS_SEED.iter().enumerate() {
             self.wrapper.regs().cptra_obf_uds_seed[i].set(val);
         }
-        println!("[DEBUG] Writing DEFAULT_FIELD_ENTROPY to strap registers");
+        eprintln!("[DEBUG] Writing DEFAULT_FIELD_ENTROPY to strap registers");
         for (i, &val) in DEFAULT_FIELD_ENTROPY.iter().enumerate() {
             self.wrapper.regs().cptra_obf_field_entropy[i].set(val);
         }
 
         // Use strap UDS and FE for deterministic IDevID on FPGA when requested
-        println!("[DEBUG] Setting secrets_valid = {}", self.saved_use_strap_secrets);
+        eprintln!("[DEBUG] Setting secrets_valid = {}", self.saved_use_strap_secrets);
         self.set_secrets_valid(self.saved_use_strap_secrets);
 
         println!("Putting subsystem into reset");
