@@ -187,13 +187,18 @@ impl Doe {
     /// * `key_id` - Key index to store the UDS
     fn unscramble_uds(&mut self, key_id: u32) {
         let cipher_uds = self.soc_reg.uds();
+        let doe_key = self.soc_reg.doe_key();
+        eprintln!("[DOE-DEBUG] cipher_uds: {:02x?}", &cipher_uds[..16]);
+        eprintln!("[DOE-DEBUG] doe_key: {:02x?}", &doe_key[..16]);
+        eprintln!("[DOE-DEBUG] iv: {:02x?}", self.iv.data());
         let mut plain_uds = [0u8; 64];
         Aes256Cbc::decrypt(
-            &self.soc_reg.doe_key(),
+            &doe_key,
             self.iv.data(),
             &cipher_uds,
             &mut plain_uds[..cipher_uds.len()],
         );
+        eprintln!("[DOE-DEBUG] plain_uds: {:02x?}", &plain_uds[..16]);
         self.key_vault
             .write_key(key_id, &bytes_swap_word_endian(&plain_uds), DOE_KEY_USAGE)
             .unwrap();
