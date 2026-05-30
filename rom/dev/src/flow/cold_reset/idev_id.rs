@@ -99,6 +99,16 @@ impl InitDevIdLayer {
             KEY_ID_IDEVID_MLDSA_KEYPAIR_SEED,
         )?;
 
+        // Debug: print IDevID ECC public key
+        cprintln!("[idev] ECC PubKey.X:");
+        for w in ecc_key_pair.pub_key.x.0.iter() {
+            cprintln!("  {:08X}", *w);
+        }
+        cprintln!("[idev] ECC PubKey.Y:");
+        for w in ecc_key_pair.pub_key.y.0.iter() {
+            cprintln!("  {:08X}", *w);
+        }
+
         // Generate the Subject Serial Number and Subject Key Identifier for ECC.
         // This information will be used by next DICE Layer while generating
         // certificates
