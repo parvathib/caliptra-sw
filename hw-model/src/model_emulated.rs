@@ -310,6 +310,14 @@ impl HwModel for ModelEmulated {
         };
         let mut root_bus = CaliptraRootBus::new(bus_args);
 
+        if let Some(metadata) = params.ss_init_params.fe_metadata {
+            let bank = root_bus.dma.axi.otp_fc.fuse_bank_mut();
+            for (partition, words) in metadata.into_iter().enumerate() {
+                let offset = (80 + partition * 24 + 8) / 4;
+                bank[offset..offset + words.len()].copy_from_slice(&words);
+            }
+        }
+
         let trng_mode = TrngMode::resolve(params.trng_mode);
         let hw_config = {
             let mut hw_config = 0;
